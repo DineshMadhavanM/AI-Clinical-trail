@@ -40,8 +40,9 @@ services:
   # ----------------------------------------------------------------------------
   # 3. React / Vite Frontend Single Page Application (Static Site)
   # ----------------------------------------------------------------------------
-  - type: static
+  - type: web
     name: ai-clinical-frontend
+    env: static
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: "frontend/dist"
     routes:
