@@ -1,0 +1,33 @@
+# Render Deployment Ignore Rules
+
+# Node / Frontend Build Artifacts & Dependencies
+node_modules/
+frontend/node_modules/
+.npm/
+
+# Python Virtual Environments & Caches
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local SQLite Database Files & Temporary Logs
+*.db
+*.sqlite
+clinical_trials.db
+*.log
+
+# Documentation & B.Tech Capstone Documents
+docs/
+*.pdf
+*.pptx
+*.docx
+
+# Git & IDE Files
+.git/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

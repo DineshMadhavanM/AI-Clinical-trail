@@ -1,0 +1,113 @@
+erDiagram
+    USERS ||--o| PATIENTS : "has profile"
+    PATIENTS ||--o{ PATIENT_BIOMARKERS : "has"
+    PATIENTS ||--o{ PATIENT_TREATMENTS : "has"
+    PATIENTS ||--o{ PATIENT_COMORBIDITIES : "has"
+    PATIENTS ||--o{ PATIENT_LAB_VALUES : "has"
+    PATIENTS ||--o{ MATCH_RESULTS : "evaluates"
+
+    CLINICAL_TRIALS ||--o{ TRIAL_LOCATIONS : "conducted at"
+    CLINICAL_TRIALS ||--o{ TRIAL_CRITERIA : "defines"
+    CLINICAL_TRIALS ||--o{ MATCH_RESULTS : "matches"
+
+    USERS {
+        int id PK
+        string email UK
+        string hashed_password
+        string full_name
+        string role
+        datetime created_at
+    }
+
+    PATIENTS {
+        int id PK
+        int user_id FK
+        int age
+        string gender
+        string country
+        string state_city
+        string primary_condition
+        string disease_stage
+        string prior_trial_participation
+        string allergies
+        text unstructured_notes
+        datetime created_at
+    }
+
+    PATIENT_BIOMARKERS {
+        int id PK
+        int patient_id FK
+        string marker_name
+        string status
+    }
+
+    PATIENT_TREATMENTS {
+        int id PK
+        int patient_id FK
+        string treatment_name
+        string treatment_type
+    }
+
+    PATIENT_COMORBIDITIES {
+        int id PK
+        int patient_id FK
+        string condition_name
+    }
+
+    PATIENT_LAB_VALUES {
+        int id PK
+        int patient_id FK
+        string lab_name
+        float value
+        string unit
+    }
+
+    CLINICAL_TRIALS {
+        string id PK
+        string title
+        text official_title
+        string condition
+        text brief_summary
+        text detailed_description
+        string phase
+        string study_type
+        string status
+        int min_age
+        int max_age
+        string gender_requirement
+        string intervention
+        string sponsor
+        string study_start
+        string primary_completion
+    }
+
+    TRIAL_LOCATIONS {
+        int id PK
+        string trial_id FK
+        string country
+        string city
+        string facility_name
+    }
+
+    TRIAL_CRITERIA {
+        int id PK
+        string trial_id FK
+        string criterion_type
+        text raw_text
+        string category
+    }
+
+    MATCH_RESULTS {
+        int id PK
+        int patient_id FK
+        string trial_id FK
+        float total_score
+        float rule_score
+        float semantic_score
+        float condition_score
+        float location_score
+        float status_score
+        string eligibility_status
+        json breakdown_json
+        datetime calculated_at
+    }
