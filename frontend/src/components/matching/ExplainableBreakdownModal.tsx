@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, CheckCircle2, AlertTriangle, XCircle, HelpCircle, FileText, Cpu, User, Dna, Pill } from 'lucide-react';
 import { MatchResult, PatientMatchResult } from '../../types';
+import { apiService } from '../../services/api';
 
 interface ExplainableBreakdownModalProps {
   match: (MatchResult & { patient?: any }) | (PatientMatchResult & { trial?: any }) | null;
@@ -163,6 +164,36 @@ export const ExplainableBreakdownModal: React.FC<ExplainableBreakdownModalProps>
               </div>
             ))}
           </div>
+
+          {/* Confirm Button below Satisfied Eligibility Factors on left side */}
+          {patient && trial && (
+            <div className="pt-3 mt-3 flex items-center justify-between border-t border-slate-800">
+              {patient.confirmed_trial_id === trial.id ? (
+                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-950/80 px-3.5 py-2 rounded-xl border border-emerald-800/60">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>✔ Patient Confirmed for Trial Protocol ({trial.id})</span>
+                </div>
+              ) : (
+                <button
+                  onClick={async () => {
+                    try {
+                      await apiService.confirmPatientTrial(patient.id, trial.id, trial.title);
+                      patient.confirmed_trial_id = trial.id;
+                      patient.confirmed_trial_title = trial.title;
+                      alert(`✅ Patient #${patient.id} successfully confirmed for ${trial.id}!`);
+                      onClose();
+                    } catch (e) {
+                      console.error(e);
+                    }
+                  }}
+                  className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-lg shadow-emerald-950/50 transition-all border border-emerald-400/30"
+                >
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Confirm Patient #{patient.id} Eligibility & Match</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Potential Issues / Failures */}

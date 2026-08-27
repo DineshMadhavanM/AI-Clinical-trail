@@ -46,6 +46,8 @@ class PatientCreate(BaseModel):
     prior_trial_participation: Optional[str] = "No"
     allergies: Optional[str] = None
     unstructured_notes: Optional[str] = None
+    confirmed_trial_id: Optional[str] = None
+    confirmed_trial_title: Optional[str] = None
     
     biomarkers: Optional[List[BiomarkerSchema]] = []
     treatments: Optional[List[TreatmentSchema]] = []

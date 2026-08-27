@@ -29,6 +29,9 @@ class Patient(Base):
     allergies = Column(Text, nullable=True)
     unstructured_notes = Column(Text, nullable=True)
     
+    confirmed_trial_id = Column(String, nullable=True)
+    confirmed_trial_title = Column(String, nullable=True)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships

@@ -37,8 +37,8 @@ export const TrialDetailPage: React.FC<TrialDetailPageProps> = ({ onOpenRAG }) =
     return (
       <div className="py-16 text-center text-slate-400 space-y-4">
         <p className="text-base font-bold text-slate-200">Clinical trial protocol not found.</p>
-        <button onClick={() => navigate('/trials')} className="text-xs text-cyan-400 underline">
-          Return to Trial Search
+        <button onClick={() => navigate('/matching')} className="text-xs text-cyan-400 underline">
+          Return to AI Matching
         </button>
       </div>
     );

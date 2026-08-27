@@ -26,7 +26,7 @@ export const RAGChatDrawer: React.FC<RAGChatDrawerProps> = ({
   >([
     {
       sender: 'assistant',
-      text: 'Hello! I am your RAG Clinical Trial Assistant. Ask me anything about eligibility requirements, study sites, or investigative treatments for selected trials.',
+      text: 'Hello! I am your AI Assistant. Ask me anything about eligibility requirements, study sites, or investigative treatments for selected trials.',
     },
   ]);
 
@@ -82,7 +82,7 @@ export const RAGChatDrawer: React.FC<RAGChatDrawerProps> = ({
               <Bot className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-100">RAG Clinical Trial Assistant</h3>
+              <h3 className="text-sm font-bold text-slate-100">AI Assistant Chat</h3>
               <p className="text-[11px] text-slate-400">Grounded Protocol Search & QA Engine</p>
             </div>
           </div>

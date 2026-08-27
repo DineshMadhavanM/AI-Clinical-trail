@@ -49,6 +49,8 @@ export interface Patient {
   treatments: Treatment[];
   comorbidities: Comorbidity[];
   lab_values: LabValue[];
+  confirmed_trial_id?: string;
+  confirmed_trial_title?: string;
   created_at: string;
 }
 

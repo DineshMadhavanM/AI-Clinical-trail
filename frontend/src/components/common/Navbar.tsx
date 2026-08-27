@@ -55,19 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRole, setRole, onOpenAssi
               }
             >
               <User className="w-4 h-4" />
-              Patient Profile
-            </NavLink>
-
-            <NavLink
-              to="/trials"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                  isActive ? 'bg-brand-600/20 text-cyan-400 border border-cyan-500/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-                }`
-              }
-            >
-              <Search className="w-4 h-4" />
-              Trial Search
+              Patient Profile Intake
             </NavLink>
 
             <NavLink
@@ -99,13 +87,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRole, setRole, onOpenAssi
 
           {/* Controls & Role Selector */}
           <div className="flex items-center gap-3">
-            {/* RAG Assistant Trigger Button */}
+            {/* AI Assistant Trigger Button */}
             <button
               onClick={onOpenAssistant}
               className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium shadow-md shadow-cyan-900/30 transition-all hover:scale-[1.02] border border-cyan-400/30"
             >
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>RAG AI Assistant</span>
+              <span>AI Assistant</span>
             </button>
 
             {/* Role Switcher */}

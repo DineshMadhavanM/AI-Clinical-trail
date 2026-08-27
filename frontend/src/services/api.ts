@@ -45,6 +45,11 @@ export const apiService = {
     return res.data;
   },
 
+  confirmPatientTrial: async (patientId: number, trialId: string, trialTitle: string): Promise<Patient> => {
+    const res = await API.post(`/patients/${patientId}/confirm-trial`, { trial_id: trialId, trial_title: trialTitle });
+    return res.data;
+  },
+
   // Trials
   getTrials: async (params?: Record<string, any>): Promise<ClinicalTrial[]> => {
     const res = await API.get('/trials', { params });

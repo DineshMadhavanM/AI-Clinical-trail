@@ -197,3 +197,19 @@ def get_patient_by_id(patient_id: int, db: Session = Depends(get_db)):
     if not patient:
         raise HTTPException(status_code=404, detail="Patient profile not found.")
     return patient
+
+from pydantic import BaseModel
+class ConfirmTrialPayload(BaseModel):
+    trial_id: str
+    trial_title: str
+
+@router.post("/{patient_id}/confirm-trial", response_model=PatientResponse)
+def confirm_patient_trial(patient_id: int, payload: ConfirmTrialPayload, db: Session = Depends(get_db)):
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient profile not found.")
+    patient.confirmed_trial_id = payload.trial_id
+    patient.confirmed_trial_title = payload.trial_title
+    db.commit()
+    db.refresh(patient)
+    return patient

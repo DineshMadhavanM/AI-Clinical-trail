@@ -5,7 +5,6 @@ import { DisclaimerBanner } from './components/common/DisclaimerBanner';
 import { RAGChatDrawer } from './components/assistant/RAGChatDrawer';
 import { Dashboard } from './pages/Dashboard';
 import { PatientProfilePage } from './pages/PatientProfilePage';
-import { TrialSearchPage } from './pages/TrialSearchPage';
 import { MatchingPage } from './pages/MatchingPage';
 import { TrialDetailPage } from './pages/TrialDetailPage';
 import { AdminPage } from './pages/AdminPage';
@@ -45,14 +44,13 @@ export const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/patient-profile" element={<PatientProfilePage />} />
-            <Route path="/trials" element={<TrialSearchPage onOpenRAG={handleOpenAssistantWithTrial} />} />
             <Route path="/matching" element={<MatchingPage onOpenRAG={handleOpenAssistantWithTrial} />} />
             <Route path="/trials/:id" element={<TrialDetailPage onOpenRAG={handleOpenAssistantWithTrial} />} />
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </main>
 
-        {/* Global RAG AI Assistant Drawer */}
+        {/* Global AI Assistant Drawer */}
         <RAGChatDrawer
           isOpen={isAssistantOpen}
           onClose={() => setIsAssistantOpen(false)}
