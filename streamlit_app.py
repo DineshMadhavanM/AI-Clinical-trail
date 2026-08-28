@@ -37,7 +37,7 @@ def ensure_embedded_backend():
                     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, log_level="warning")
                 t = threading.Thread(target=_start_uvicorn, daemon=True)
                 t.start()
-                time.sleep(2)
+                time.sleep(3)
             except Exception as err:
                 print(f"Embedded backend startup notice: {err}")
 
@@ -121,24 +121,37 @@ page = st.sidebar.radio(
     ]
 )
 
-# Helper function to query backend
+# Helper function to query backend with retries and auto-seeding
 def api_get(endpoint, params=None):
-    try:
-        r = requests.get(f"{API_BASE_URL}{endpoint}", params=params, timeout=5)
-        if r.status_code == 200:
-            return r.json()
-    except Exception:
-        pass
+    for attempt in range(2):
+        try:
+            r = requests.get(f"{API_BASE_URL}{endpoint}", params=params, timeout=10)
+            if r.status_code == 200:
+                return r.json()
+        except Exception:
+            pass
+        time.sleep(1)
     return None
 
 def api_post(endpoint, json_data):
-    try:
-        r = requests.post(f"{API_BASE_URL}{endpoint}", json=json_data, timeout=8)
-        if r.status_code == 200:
-            return r.json()
-    except Exception as e:
-        st.error(f"API Error: {e}")
+    for attempt in range(2):
+        try:
+            r = requests.post(f"{API_BASE_URL}{endpoint}", json=json_data, timeout=10)
+            if r.status_code == 200:
+                return r.json()
+        except Exception as e:
+            if attempt == 1:
+                st.error(f"API Connection Warning: {e}")
+        time.sleep(1)
     return None
+
+# Auto-seed dataset on initial load if empty
+if "auto_seeded" not in st.session_state:
+    st.session_state["auto_seeded"] = True
+    stats = api_get("/admin/stats")
+    if not stats or stats.get("total_trials", 0) == 0:
+        api_post("/admin/seed-dataset", {})
+
 
 # ==========================================
 # PAGE 1: EXECUTIVE DASHBOARD
