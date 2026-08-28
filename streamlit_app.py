@@ -25,25 +25,40 @@ import time
 import sys
 
 def ensure_embedded_backend():
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.join(curr_dir, "backend")
+    if backend_dir not in sys.path:
+        sys.path.insert(0, backend_dir)
+    if curr_dir not in sys.path:
+        sys.path.insert(0, curr_dir)
+
+    # 1. Direct in-process database seeding (instant startup)
+    try:
+        from app.core.database import SessionLocal
+        from data.seed_data import seed_clinical_trials_database
+        db = SessionLocal()
+        try:
+            seed_clinical_trials_database(db)
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"Direct dataset seeding notice: {e}")
+
+    # 2. Spin up background FastAPI server if port 8000 is inactive
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if s.connect_ex(('127.0.0.1', 8000)) != 0:
             try:
-                curr_dir = os.path.dirname(os.path.abspath(__file__))
-                backend_dir = os.path.join(curr_dir, "backend")
-                if backend_dir not in sys.path:
-                    sys.path.insert(0, backend_dir)
                 import uvicorn
+                from app.main import app as fastapi_app
                 def _start_uvicorn():
-                    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, log_level="warning")
+                    uvicorn.run(fastapi_app, host="127.0.0.1", port=8000, log_level="warning")
                 t = threading.Thread(target=_start_uvicorn, daemon=True)
                 t.start()
-                time.sleep(3)
+                time.sleep(2)
             except Exception as err:
                 print(f"Embedded backend startup notice: {err}")
 
 ensure_embedded_backend()
-
-
 
 
 # Custom CSS for dark glassmorphic medical theme
@@ -121,7 +136,7 @@ page = st.sidebar.radio(
     ]
 )
 
-# Helper function to query backend with retries and auto-seeding
+# Helper function to query backend with retries
 def api_get(endpoint, params=None):
     for attempt in range(2):
         try:
@@ -139,18 +154,11 @@ def api_post(endpoint, json_data):
             r = requests.post(f"{API_BASE_URL}{endpoint}", json=json_data, timeout=10)
             if r.status_code == 200:
                 return r.json()
-        except Exception as e:
-            if attempt == 1:
-                st.error(f"API Connection Warning: {e}")
+        except Exception:
+            pass
         time.sleep(1)
     return None
 
-# Auto-seed dataset on initial load if empty
-if "auto_seeded" not in st.session_state:
-    st.session_state["auto_seeded"] = True
-    stats = api_get("/admin/stats")
-    if not stats or stats.get("total_trials", 0) == 0:
-        api_post("/admin/seed-dataset", {})
 
 
 # ==========================================
