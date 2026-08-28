@@ -17,9 +17,17 @@ if curr_dir not in sys.path:
     sys.path.insert(0, curr_dir)
 
 import uvicorn
-from app.core.database import SessionLocal
-from data.seed_data import seed_clinical_trials_database
-from app.main import app as fastapi_app
+
+try:
+    from app.core.database import SessionLocal
+    from data.seed_data import seed_clinical_trials_database
+    from app.main import app as fastapi_app
+except ModuleNotFoundError:
+    sys.path.insert(0, backend_dir)
+    from app.core.database import SessionLocal
+    from data.seed_data import seed_clinical_trials_database
+    from app.main import app as fastapi_app
+
 
 # Page Config
 st.set_page_config(
