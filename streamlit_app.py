@@ -18,6 +18,32 @@ if raw_api_url.startswith("http://") or raw_api_url.startswith("https://"):
 else:
     API_BASE_URL = f"https://{raw_api_url}/api/v1"
 
+# Auto-start embedded backend server if running on single-service cloud host
+import socket
+import threading
+import time
+import sys
+
+def ensure_embedded_backend():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        if s.connect_ex(('127.0.0.1', 8000)) != 0:
+            try:
+                curr_dir = os.path.dirname(os.path.abspath(__file__))
+                backend_dir = os.path.join(curr_dir, "backend")
+                if backend_dir not in sys.path:
+                    sys.path.insert(0, backend_dir)
+                import uvicorn
+                def _start_uvicorn():
+                    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, log_level="warning")
+                t = threading.Thread(target=_start_uvicorn, daemon=True)
+                t.start()
+                time.sleep(2)
+            except Exception as err:
+                print(f"Embedded backend startup notice: {err}")
+
+ensure_embedded_backend()
+
+
 
 
 # Custom CSS for dark glassmorphic medical theme

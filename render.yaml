@@ -1,6 +1,6 @@
 services:
   # ----------------------------------------------------------------------------
-  # 1. Streamlit Web Application Service
+  # Unified Single Web Service (Streamlit Web UI + Embedded FastAPI Backend)
   # ----------------------------------------------------------------------------
   - type: web
     name: ai-clinical-streamlit
@@ -10,33 +10,6 @@ services:
     buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt"
     startCommand: "python -m streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0"
     envVars:
-      - key: API_BASE_URL
-        fromService:
-          type: web
-          name: ai-clinical-backend
-          property: host
-      - key: PYTHONPATH
-        value: "./backend"
-      - key: PYTHON_VERSION
-        value: 3.11.8
-
-  # ----------------------------------------------------------------------------
-  # 2. FastAPI Backend REST API Service
-  # ----------------------------------------------------------------------------
-  - type: web
-    name: ai-clinical-backend
-    env: python
-    region: oregon
-    plan: free
-    buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt"
-    startCommand: "cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT"
-    envVars:
-      - key: SECRET_KEY
-        generateValue: true
-      - key: ALGORITHM
-        value: HS256
-      - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: 14400
       - key: PYTHONPATH
         value: "./backend"
       - key: PYTHON_VERSION
