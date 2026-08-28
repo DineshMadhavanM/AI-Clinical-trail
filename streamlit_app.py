@@ -419,8 +419,9 @@ elif page == "📋 Trial Protocol Detail View":
                     st.write(f"• {c['raw_text']}")
 
 # ==========================================
-# PAGE 5: AI ASSISTANT CHAT
+# PAGE 6: AI ASSISTANT CHAT
 # ==========================================
+
 elif page == "💬 AI Assistant Chat":
     st.markdown('<div class="main-header">AI Clinical Trial Assistant</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Grounded protocol QA engine with trial document citations.</div>', unsafe_allow_html=True)
