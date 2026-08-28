@@ -3,6 +3,23 @@ import pandas as pd
 import requests
 import json
 import os
+import sys
+import socket
+import threading
+import time
+
+# Initialize Python path for backend module resolution
+curr_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.join(curr_dir, "backend")
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+if curr_dir not in sys.path:
+    sys.path.insert(0, curr_dir)
+
+import uvicorn
+from app.core.database import SessionLocal
+from data.seed_data import seed_clinical_trials_database
+from app.main import app as fastapi_app
 
 # Page Config
 st.set_page_config(
@@ -18,24 +35,9 @@ if raw_api_url.startswith("http://") or raw_api_url.startswith("https://"):
 else:
     API_BASE_URL = f"https://{raw_api_url}/api/v1"
 
-# Auto-start embedded backend server if running on single-service cloud host
-import socket
-import threading
-import time
-import sys
-
 def ensure_embedded_backend():
-    curr_dir = os.path.dirname(os.path.abspath(__file__))
-    backend_dir = os.path.join(curr_dir, "backend")
-    if backend_dir not in sys.path:
-        sys.path.insert(0, backend_dir)
-    if curr_dir not in sys.path:
-        sys.path.insert(0, curr_dir)
-
     # 1. Direct in-process database seeding (instant startup)
     try:
-        from app.core.database import SessionLocal
-        from data.seed_data import seed_clinical_trials_database
         db = SessionLocal()
         try:
             seed_clinical_trials_database(db)
@@ -48,8 +50,6 @@ def ensure_embedded_backend():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if s.connect_ex(('127.0.0.1', 8000)) != 0:
             try:
-                import uvicorn
-                from app.main import app as fastapi_app
                 def _start_uvicorn():
                     uvicorn.run(fastapi_app, host="127.0.0.1", port=8000, log_level="warning")
                 t = threading.Thread(target=_start_uvicorn, daemon=True)
@@ -59,6 +59,7 @@ def ensure_embedded_backend():
                 print(f"Embedded backend startup notice: {err}")
 
 ensure_embedded_backend()
+
 
 
 # Custom CSS for dark glassmorphic medical theme
