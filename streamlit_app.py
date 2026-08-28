@@ -18,14 +18,10 @@ if curr_dir not in sys.path:
 
 import uvicorn
 
-try:
-    from backend.app.core.database import SessionLocal
-    from backend.data.seed_data import seed_clinical_trials_database
-    from backend.app.main import app as fastapi_app
-except ModuleNotFoundError:
-    from app.core.database import SessionLocal
-    from data.seed_data import seed_clinical_trials_database
-    from app.main import app as fastapi_app
+from backend.app.core.database import SessionLocal
+from backend.data.seed_data import seed_clinical_trials_database
+from backend.app.main import app as fastapi_app
+
 
 
 
