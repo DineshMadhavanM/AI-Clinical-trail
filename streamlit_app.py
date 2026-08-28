@@ -12,7 +12,12 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-API_BASE_URL = os.environ.get("API_BASE_URL", "http://127.0.0.1:8000/api/v1")
+raw_api_url = os.environ.get("API_BASE_URL", "http://127.0.0.1:8000/api/v1")
+if raw_api_url.startswith("http://") or raw_api_url.startswith("https://"):
+    API_BASE_URL = raw_api_url.rstrip("/")
+else:
+    API_BASE_URL = f"https://{raw_api_url}/api/v1"
+
 
 
 # Custom CSS for dark glassmorphic medical theme

@@ -1,6 +1,6 @@
 services:
   # ----------------------------------------------------------------------------
-  # 1. FastAPI Backend Service (REST APIs, Hybrid AI Matching & RAG Assistant)
+  # 1. FastAPI Backend REST API Service
   # ----------------------------------------------------------------------------
   - type: web
     name: ai-clinical-backend
@@ -15,7 +15,7 @@ services:
       - key: ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: 1440
+        value: 14400
       - key: PYTHONPATH
         value: "./backend"
       - key: PYTHON_VERSION
@@ -32,6 +32,11 @@ services:
     buildCommand: "pip install --upgrade pip && pip install -r backend/requirements.txt"
     startCommand: "python -m streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0"
     envVars:
+      - key: API_BASE_URL
+        fromService:
+          type: web
+          name: ai-clinical-backend
+          property: host
       - key: PYTHONPATH
         value: "./backend"
       - key: PYTHON_VERSION
